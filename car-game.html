@@ -14,8 +14,25 @@
             padding: 0;
         }
 
-        body{
-            background: url(back.jpg) no-repeat center;
+        img{height:100px;}
+        .enemy_car {
+            rotate: 180deg;
+        } 
+       
+       .road{ 
+        display: flex;
+        background-image: url(road.jpg) no-repeat center;
+        height:100%;
+       }            
+       
+       body{
+        text-align: center;
+       }
+       
+       
+       
+       /* body{
+             background: url(back.jpg) no-repeat center; 
             background-size: cover;
             height: 100vh;
             display: grid;
@@ -23,25 +40,36 @@
         }
         road{
             background: ulr();
-        }
+        } */
     </style>
 
     <body>
         
         <div id="score">Score : 0</div>
-        <button id="start">start   </button>
+        <button id="start" onclick="startGame()">start   </button>
+           
+                <div class="road">
+                <img class="enemy_car" src="car11.png" alt="car">
+                <img class="enemy_car" src="car12.png" alt="car">
+                <img class="enemy_car" src="car13.png" alt="car">
+                <img class="enemy_car" src="car14.png" alt="car">
+                <img class="enemy_car" src="car15.png" alt="car">
+                </div>
 
-        <div>
-            <div id="enemycar1"><img id="ecaring1" class="ecaring" src="car1.png" alt=""></div>
-            <div id="enemycar2"><img id="ecaring2" class="ecaring" src="car2.png" alt=""></div>
-            <div id="enemycar3"><img id="ecaring3" class="ecaring" src="car1.png" alt=""></div>
-            <div id="enemycar4"><img id="ecaring3" class="ecaring" src="car2.png" alt=""></div>
+            
+            
 
-        </div>
 
-        <div id="mycar"><img id="mycar" class="mycars" src="car.png" alt="" ></div>
-
+        <img class="mycar" src="car15.png" alt="car">
         <div id="road"></div>
 
 
     </body>
+
+    <script>
+function startGame(){
+
+}
+
+
+    </script>
