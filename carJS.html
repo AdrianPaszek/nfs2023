@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Avoid the Cars Game</title>
+  <style>
+    #player {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 80px;
+      background-color: blue;
+    }
+
+    .car {
+      position: absolute;
+      width: 50px;
+      height: 80px;
+      background-color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Avoid the Cars Game</h1>
+  <div id="player"></div>
+
+  <script>
+    // Constants
+    const PLAYER_WIDTH = 50;
+    const PLAYER_HEIGHT = 80;
+    const CAR_WIDTH = 50;
+    const CAR_HEIGHT = 80;
+    const GAME_WIDTH = window.innerWidth;
+    const GAME_HEIGHT = window.innerHeight;
+    const PLAYER_SPEED = 5;
+    const CAR_SPEED = 3;
+    const SPAWN_INTERVAL = 1500;
+
+    // Variables
+    let playerPositionX = GAME_WIDTH / 2 - PLAYER_WIDTH / 2;
+    let cars = [];
+    let gameRunning = true;
+    let score = 0;
+
+    // Create a car element
+    function createCar() {
+      const car = document.createElement("div");
+      car.className = "car";
+      car.style.left = Math.random() * (GAME_WIDTH - CAR_WIDTH) + "px";
+      car.style.top = -CAR_HEIGHT + "px";
+      document.body.appendChild(car);
+      cars.push(car);
+    }
+
+    // Update car positions and check for collisions
+    function updateGame() {
+      if (!gameRunning) {
+        return;
+      }
+
+      for (let i = 0; i < cars.length; i++) {
+        const car = cars[i];
+        const carPositionY = parseFloat(car.style.top);
+
+        // Move the car
+        car.style.top = carPositionY + CAR_SPEED + "px";
+
+        // Check for collision
+        if (
+          carPositionY + CAR_HEIGHT >= GAME_HEIGHT - PLAYER_HEIGHT &&
+          carPositionY <= GAME_HEIGHT &&
+          playerPositionX + PLAYER_WIDTH >= parseFloat(car.style.left) &&
+          playerPositionX <= parseFloat(car.style.left) + CAR_WIDTH
+        ) {
+          endGame();
+          return;
+        }
+
+        // Remove cars that have gone off the screen
+        if (carPositionY > GAME_HEIGHT) {
+          cars.splice(i, 1);
+          document.body.removeChild(car);
+          score++;
+          updateScore();
+          i--;
+        }
+      }
+
+      requestAnimationFrame(updateGame);
+    }
+
+    // Handle key press events
+    document.addEventListener("keydown", function(event) {
+      if (event.key === "ArrowLeft") {
+        playerPositionX -= PLAYER_SPEED;
+      } else if (event.key === "ArrowRight") {
+        playerPositionX += PLAYER_SPEED;
+      }
+
+      // Keep the player within the game bounds
+      if (playerPositionX < 0) {
+        playerPositionX = 0;
+      } else if (playerPositionX > GAME_WIDTH - PLAYER_WIDTH) {
+        playerPositionX = GAME_WIDTH - PLAYER_WIDTH;
+      }
+
+      // Update the player position
+      document.getElementById("player").style.left = playerPositionX + "px";
+    });
+
+    // Start the game
+    function startGame() {
+      score = 0;
+      updateScore();
+      gameRunning = true;
+      createCar();
+      update
