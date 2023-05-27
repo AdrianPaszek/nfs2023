@@ -23,8 +23,8 @@
         #road {
             position: relative;
             margin: 0 auto;
-            width: 500px;
-            height: 800px;
+            width: 400px;
+            height: 650px;
             background-color:darkgray;
             border: solid black;
             border-top: 0;
@@ -33,7 +33,6 @@
     </style>
     
     <body>
-        Tworzenie paragrafu z 
         <p id="score"> Wynik: </p>
         <button id="start" onclick="startGame()"> start </button>
         <center>
@@ -45,14 +44,20 @@
     </body>
 
     <script>
-        // elementy, wielkość okna, pozycja poczarkowa autka i wymiary. szybkość autka
-        const road = document.getElementById("road")
-        const scoreCounter = document.getElementById("score")
-        const car = document.getElementById("my_car")
-        const roadWidth = 
-        width:700;
-        height:800 
-
+        // szybkość autka
+        const road = document.getElementById("road");
+        const scoreCounter = document.getElementById("score");
+        const car = document.getElementById("my_car");
+        
+        const roadHeight = road.clientHeight;
+        const roadWidth = road.clientWidth;
+        
+        const carHeight = car.clientHeight;
+        const carWidth = car.clientWidth;
+        let carPositionX = ( roadWidth - (carWidth/2) ) / 2;
+        let carPositionY = ( roadHeight - carHeight ) - 15;
+        
+        const carSpeed = 2;
 
         function startGame(){
             scoreCounter.innerHTML="adaada";
