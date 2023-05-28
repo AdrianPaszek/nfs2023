@@ -5,43 +5,103 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Document</title>
+        <link rel="stylesheet" href="style.css">
     </head>
 
-    <style>
-        
-        *{
-            margin: 0;
-            padding: 0;
-        }
-
-        body{
-            background: url(back.jpg) no-repeat center;
-            background-size: cover;
-            height: 100vh;
-            display: grid;
-            place-items: center;
-        }
-        road{
-            background: ulr();
-        }
-    </style>
 
     <body>
-        
-        <div id="score">Score : 0</div>
-        <button id="start">start   </button>
 
-        <div>
-            <div id="enemycar1"><img id="ecaring1" class="ecaring" src="car1.png" alt=""></div>
-            <div id="enemycar2"><img id="ecaring2" class="ecaring" src="car2.png" alt=""></div>
-            <div id="enemycar3"><img id="ecaring3" class="ecaring" src="car1.png" alt=""></div>
-            <div id="enemycar4"><img id="ecaring3" class="ecaring" src="car2.png" alt=""></div>
+        <div id="score">Score : 0</div>
+        <button onclick="start()" id="start">start   </button>
+
+        <div class="flex road">
+
+            <img src="1.jpg"/>
+            <img src="1.jpg"/>
 
         </div>
 
-        <div id="mycar"><img id="mycar" class="mycars" src="car.png" alt="" ></div>
+        <div>
+            <div class="cardiv" id="enemycar1"><img id="ecaring1" class="ecaring" src="car11.png" alt=""/></div>
+            <div class="cardiv" id="enemycar2"><img id="ecaring2" class="ecaring" src="car12.png" alt=""/></div>
+            <div class="cardiv" id="enemycar3"><img id="ecaring3" class="ecaring" src="car11.png" alt=""/></div>
+            <div class="cardiv" id="enemycar4"><img id="ecaring3" class="ecaring" src="car12.png" alt=""/></div>
 
-        <div id="road"></div>
+        </div>
+
+
+        <img id="mycar" class="mycars" src="car13.png" alt="" >
+        
+
+
+
 
 
     </body>
+
+    <script>
+
+        function start() {
+            const enemyCars = document.querySelectorAll(".cardiv")
+            document.querySelector("#start").remove()
+
+for (const car of enemyCars) {
+    car.style.animationPlayState = 'running'
+    console.log("a")
+}
+        }
+
+function checkCollisions(collidingCar) {
+  const mycar = document.getElementById('mycar');
+  const carRect = mycar.getBoundingClientRect();
+  const enemyCarRect = collidingCar.getBoundingClientRect();
+
+  if (
+    carRect.left < enemyCarRect.right &&
+    carRect.right > enemyCarRect.left &&
+    carRect.top < enemyCarRect.bottom &&
+    carRect.bottom > enemyCarRect.top
+  ) {
+    console.log('Elements collide!');
+    alert("Game Over")
+    return
+  } 
+
+  requestAnimationFrame(() => checkCollisions(collidingCar));
+}
+
+const enemyCars = document.querySelectorAll(".ecaring")
+
+for (const car of enemyCars) {
+
+requestAnimationFrame(() => checkCollisions(car));
+}
+
+    let t=15
+    let l=0
+
+      window.addEventListener("keydown",function(x){
+        if(x.keyCode==87){
+            t=t-3
+        }
+        if(x.keyCode==65){
+            l=l-1
+            //alert("w")
+        }
+        if(x.keyCode==83){
+            t=t+3
+
+            //alert("w")
+        }
+        if(x.keyCode==68){
+            l=l+1
+           // alert("w")
+        }
+        document.getElementById("mycar").style.top=`${t}vh` 
+        document.getElementById("mycar").style.left=`${l}vw`
+
+        
+      })
+
+    </script>
+</html>
