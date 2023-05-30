@@ -12,6 +12,11 @@
             margin: 0;
             padding: 0;
         }
+        button,
+            p{position: absolute;}
+            body{background-image: url(back.jpg);
+        }
+
         img {
             height:100px;
         }
@@ -23,13 +28,37 @@
         #road {
             position: relative;
             margin: 0 auto;
-            width: 400px;
-            height: 650px;
-            background-color:darkgray;
+            width: 500px;
+            height: 99vh;
+            background-image:url(droga.png);
+            background-repeat: no-repeat;
+            background-size: cover;
             border: solid black;
             border-top: 0;
             border-bottom: 0;
         }       
+
+        #start{
+            position: absolute;
+            top: 60vh;
+            left: 47vw;
+            z-index: 100;
+            font-size: 2rem;
+            background-color:rgb(215, 12, 12);
+            color: white;
+            padding: 5px;
+            border-radius: 20px;
+            cursor: pointer;
+       }
+       #score{
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size:2rem;
+            padding: 5px;
+            background-color: aliceblue;
+            border-radius: 20px;
+        }
     </style>
     
     <body>
@@ -69,8 +98,6 @@
         });
         
         // funkcja utrzymujaca samochod wewnatrz drogi
-        
-        
         // funkcja sterujaca samochodem
         function moveCar() {
             if (pressedKeys["ArrowUp"] && pressedKeys["ArrowRight"]) {
@@ -116,8 +143,11 @@
             requestAnimationFrame(moveCar);
         };
         requestAnimationFrame(moveCar);
-        function startGame(){
+        
+        function startGame(){ 
+            document.querySelector("#start").remove()
             scoreCounter.textContent = "Wynik: " + score;
         }
+        
 
     </script>
