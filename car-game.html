@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title> CarGame </title>
+        <title> RED MATIZ </title>
     </head>
 
     <style>
@@ -12,13 +12,16 @@
             margin: 0;
             padding: 0;
         }
+        body{overflow: hidden;
+        margin-top: 0px;}
         button,
             p{position: absolute;}
             body{background-image: url(back.jpg);
         }
 
         img {
-            height:100px;
+            height:50px;
+            width:50px
         }
         
         #my_car {
@@ -29,7 +32,7 @@
             position: relative;
             margin: 0 auto;
             width: 500px;
-            height: 99vh;
+            height: 100vh;
             background-image:url(droga.png);
             background-repeat: no-repeat;
             background-size: cover;
@@ -62,11 +65,18 @@
     </style>
     
     <body>
-        <p id="score"> Wynik: </p>
+        <p id="score"></p>
         <button id="start" onclick="startGame()"> start </button>
         <center>
             <div id="road">
                 <div id="my_car"><img src="car15.png" alt="car"></div>
+            </div>
+            <div>
+                <div class="cardiv" id="enemycar1"><img id="ecaring1" class="ecaring" src="car11.png" alt=""/></div>
+                <div class="cardiv" id="enemycar2"><img id="ecaring2" class="ecaring" src="car12.png" alt=""/></div>
+                <div class="cardiv" id="enemycar3"><img id="ecaring3" class="ecaring" src="car11.png" alt=""/></div>
+                <div class="cardiv" id="enemycar4"><img id="ecaring3" class="ecaring" src="car12.png" alt=""/></div>
+    
             </div>
         </center>
         
@@ -89,6 +99,7 @@
         let score = 0;
         let pressedKeys = {};
         const carSpeed = 2;
+        
 
         document.addEventListener("keydown", function(event) {
             pressedKeys[event.key] = true;
@@ -144,10 +155,12 @@
         };
         requestAnimationFrame(moveCar);
         
+        
         function startGame(){ 
             document.querySelector("#start").remove()
-            scoreCounter.textContent = "Wynik: " + score;
-        }
+            scoreCounter.textContent = "You have reached: " + score + " Matize's";
+            scoreCounter.style.width = "22%"
+            }
         
 
     </script>
