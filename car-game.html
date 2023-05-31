@@ -1,47 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-    </head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="styles/style.css" />
+    <title>Brum Brum</title>
+  </head>
 
-    <style>
-        
-        *{
-            margin: 0;
-            padding: 0;
-        }
+  <style>
+    .banner {
+      background-image: url("image/back_ground.jpg");
+      background-size: cover;
+      height: 600px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 32px;
+    }
 
-        body{
-            background: url(back.jpg) no-repeat center;
-            background-size: cover;
-            height: 100vh;
-            display: grid;
-            place-items: center;
-        }
-        road{
-            background: ulr();
-        }
-    </style>
+    /* .banner > p {
+      color: white;
+      padding: 10px;
+    } */
+  </style>
 
-    <body>
-        
-        <div id="score">Score : 0</div>
-        <button id="start">start   </button>
-
-        <div>
-            <div id="enemycar1"><img id="ecaring1" class="ecaring" src="car1.png" alt=""></div>
-            <div id="enemycar2"><img id="ecaring2" class="ecaring" src="car2.png" alt=""></div>
-            <div id="enemycar3"><img id="ecaring3" class="ecaring" src="car1.png" alt=""></div>
-            <div id="enemycar4"><img id="ecaring3" class="ecaring" src="car2.png" alt=""></div>
-
+  <body>
+    <div class="game-container">
+      <div class="game">
+        <div class="logo"></div>
+        <div class="level-container">
+          <div id="road">
+            <!-- <p id="score">Wynik:</p> -->
+            <!-- <button id="start" onclick="startGame()">start</button>
+          <center>
+            <div id="road">
+              <div id="my_car"><img src="car15.png" alt="car" /></div>
+            </div>
+          </center> -->
+          </div>
         </div>
+      </div>
+    </div>
+  </body>
 
-        <div id="mycar"><img id="mycar" class="mycars" src="car.png" alt="" ></div>
+  <script>
+    // szybkość autka
+    const road = document.getElementById("road");
+    const scoreCounter = document.getElementById("score");
+    const car = document.getElementById("my_car");
 
-        <div id="road"></div>
+    const roadHeight = road.clientHeight;
+    const roadWidth = road.clientWidth;
 
+    const carHeight = car.clientHeight;
+    const carWidth = car.clientWidth;
+    let carPositionX = (roadWidth - carWidth / 2) / 2;
+    let carPositionY = roadHeight - carHeight - 15;
 
-    </body>
+    const carSpeed = 2;
+
+    function startGame() {
+      scoreCounter.innerHTML = "adaada";
+    }
+  </script>
+</html>

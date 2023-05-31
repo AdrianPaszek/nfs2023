@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="styles/style.css" />
+    <script src="js/brum-racing-game-constants.js"></script>
+    <script src="js/collision-detector.js"></script>
+    <script src="js/brum-racing-game.js"></script>
+
+    <title>Brum Brum</title>
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        background-image: url("image/back_ground.jpg");
+        background-size: cover;
+      }
+
+      .game-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-height: 100%;
+      }
+
+      .game {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Zmieniono z 'flex-start' na 'center' */
+      }
+
+      .logo {
+        background-image: url("image/logooo.png");
+        background-repeat: no-repeat;
+        background-position: right;
+        width: 90%;
+        height: 220px;
+        margin-bottom: 40px;
+      }
+
+      .center-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .center-content img {
+        max-width: 100%;
+        max-height: 300%;
+        margin-left: 30%;
+      }
+
+      .level-container {
+        width: 277px;
+        text-align: center;
+        letter-spacing: 1px;
+        color: #000;
+        font-family: sans-serif, Arial;
+        font-weight: bold;
+        padding: 15px;
+        font-size: 22px;
+        position: relative;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game-container">
+      <div class="game">
+        <div class="logo"></div>
+        <div class="center-image">
+          <img src="image/road.jpg" alt="road" />
+        </div>
+        <div class="level-container">LEVEL <span id="level"></span></div>
+        <canvas
+          id="game-canvas"
+          class="game-canvas"
+          width="261"
+          height="522"
+        ></canvas>
+        <div id="game-resources" style="display: none"></div>
+      </div>
+    </div>
+  </body>
+</html>
