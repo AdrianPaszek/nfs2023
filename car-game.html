@@ -61,7 +61,17 @@
             padding: 5px;
             background-color: aliceblue;
             border-radius: 20px;
-        }
+       }
+       .enemy{
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        background-image: url(car10.png);
+        rotate: 180deg;
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+  
     </style>
     
     <body>
@@ -71,18 +81,12 @@
             <div id="road">
                 <div id="my_car"><img src="car15.png" alt="car"></div>
             </div>
-            <div>
-                <div class="cardiv" id="enemycar1"><img id="ecaring1" class="ecaring" src="car11.png" alt=""/></div>
-                <div class="cardiv" id="enemycar2"><img id="ecaring2" class="ecaring" src="car12.png" alt=""/></div>
-                <div class="cardiv" id="enemycar3"><img id="ecaring3" class="ecaring" src="car11.png" alt=""/></div>
-                <div class="cardiv" id="enemycar4"><img id="ecaring3" class="ecaring" src="car12.png" alt=""/></div>
-    
-            </div>
         </center>
         
     </body>
 
     <script>
+
         // szybkość autka
         const road = document.getElementById("road");
         const scoreCounter = document.getElementById("score");
@@ -107,7 +111,38 @@
         document.addEventListener("keyup", function(event) {
             pressedKeys[event.key] = false;
         });
-        
+    
+        function enemyCarSpawn() {
+            setInterval(() => {
+                let enemyCar = document.createElement('div');
+                enemyCar.setAttribute('class', 'enemy');
+                enemyCar.style.top = 10 + "px";
+                enemyCar.style.left = (Math.random() * (roadWidth - carWidth)) + "px";
+                enemyCar.style.display = "block";
+                road.appendChild(enemyCar);
+
+                let enemyCarMove = setInterval(() => {
+                    const enemyCarY = enemyCar.offsetTop;
+                    if (enemyCarY >= roadHeight) {
+                        road.removeChild(enemyCar);
+                        clearInvertal(enemyCarMove);
+                    } else {
+                        enemyCar.style.top = enemyCar.offsetTop + carSpeed + "px";
+                        if (
+                            enemyCarY + 100 >= carPositionY &&
+                            enemyCarY <= carPositionY + carHeight &&
+                            parseInt(enemyCar.style.left) >= carPositionX - carWidth &&
+                            parseInt(enemyCar.style.left) <= carPositionX + carWidth
+                        ) {
+                            clearInterval(enemyCarMove);
+                            window.alert("Chłopie patrz jak jeździsz! | Wynik: " + score);
+                        }
+                    }
+
+                }, 10);
+            }, 2000);
+        };
+
         // funkcja utrzymujaca samochod wewnatrz drogi
         // funkcja sterujaca samochodem
         function moveCar() {
@@ -154,13 +189,13 @@
             requestAnimationFrame(moveCar);
         };
         requestAnimationFrame(moveCar);
-        
-        
-        function startGame(){ 
-            document.querySelector("#start").remove()
-            scoreCounter.textContent = "You have reached: " + score + " Matize's";
-            scoreCounter.style.width = "22%"
-            }
-        
 
+        function startGame() { 
+            document.querySelector("#start").remove();
+            scoreCounter.textContent = "You have reached: " + score + " Matize's";
+            scoreCounter.style.width = "22%";
+            for(cars = 0; cars < Math.random() * 2; cars++) {
+                enemyCarSpawn();
+            };
+        };
     </script>
