@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RED MATIZ</title>
+    <title>RED MATIZ </title>
 </head>
 
 <style>
@@ -12,261 +13,327 @@
         margin: 0;
         padding: 0;
     }
-    body {
-        overflow: hidden;
-        margin-top: 0px;
-    }
-    button,
-    p {
-        position: absolute;
-    }
-    body {
-        background-image: url(back.jpg);
-    }
 
-    img {
-        height: 50px;
-        width: 50px
-    }
-
-    #my_car {
-        position: absolute;
-        bottom: 15px;
-    }
-    #road {
-        position: relative;
-        margin: 0 auto;
-        width: 500px;
-        height: 100vh;
-        background-image: url(droga.png);
-        background-repeat: no-repeat;
+    body {
+        background: url(back.jpg) no-repeat center;
         background-size: cover;
-        border: solid black;
-        border-top: 0;
-        border-bottom: 0;
-    }       
+        height: 100vh;
+        display: grid;
+        place-items: center;
+
+    }
+
+    #road {
+        background: url(droga.png) repeat-y;
+        height: 1200vh;
+        width: 50vw;
+        position: relative;
+        top: -80vh;
+        z-index: -9;
+    }
 
     #start {
         position: absolute;
-        top: 60vh;
-        left: 47vw;
         z-index: 100;
         font-size: 2rem;
-        background-color: rgb(215, 12, 12);
+        background-color: rgb(245, 99, 99);
         color: white;
         padding: 5px;
         border-radius: 20px;
         cursor: pointer;
     }
+
     #score {
         position: absolute;
         top: 20px;
         left: 20px;
         font-size: 2rem;
         padding: 5px;
-        background-color: aliceblue;
+        background-color: white;
         border-radius: 20px;
     }
 
+    #enemycar1 {
+        
+        position: relative;
+        width: 100px;
+        height: 100px;
+        left: 310px;
+        z-index: 1001;
+    
+    }
+
+    #enemycar2 {
+       
+        position: relative;
+        width: 100px;
+        height: 100px;
+        left: 100px;
+        z-index: 1001;
+        
+
+    }
+
+    #enemycar3 {
+        
+        position: relative;
+        width: 100px;
+        height: 100px;
+        left: -100px;
+        z-index: 1001;
+        
+
+    }
+
+    #enemycar4 {
+       
+        position: relative;
+        width: 100px;
+        height: 100px;
+        left: -300px;
+        top: -250px;
+        z-index: 1001;
+        
+
+    }
+
+    .ecarimg {
+        width: 80px;
+        border: 2px solid red;
+    }
+
+    .mycarimg {
+        border: 2px solid red;
+        width: 80px;
+    }
+
+    #mycar {
+        width: 100px;
+        height: 100px;
+        position: relative;
+        top: 15vh;
+
+    }
+
+    @keyframes ecar1 {
+        0% {
+            top: -30vh;
+
+        }
+
+        100% {
+            top: 100vh;
+        }
+    }
+
+    @keyframes ecar2 {
+        0% {
+            top: -50vh;
+
+        }
+
+        100% {
+            top: 100vh;
+        }
+    }
+
+    @keyframes ecar3 {
+        0% {
+            top: -60vh;
+
+        }
+
+        100% {
+            top: 100vh;
+        }
+    }
+
+    @keyframes ecar4 {
+        0% {
+            top: -80vh;
+
+        }
+
+        100% {
+            top: 100vh;
+        }
+    }
+
+    @keyframes roadanimation {
+        0% {
+            top: -1100vh;
+
+        }
+
+        100% {
+            top: -200vh;
+        }
+    }
 </style>
 
 <body>
-    <p id="score"></p>
-    <button id="start" onclick="startGame()">Start</button>
-    <center>
-        <div id="road">
-            <div id="my_car"><img src="car15.png" alt="car"></div>
-        </div>
-        <div>
-            
-        </div>
-    </center>
-    
+
+    <div id="score">Score : 0</div>
+    <button id="start">Start</button>
+
+    <div>
+        <div id="enemycar1"><img id="ecarimg1" class="ecarimg" src="car10.png" alt=""></div>
+        <div id="enemycar2"><img id="ecarimg2" class="ecarimg" src="car11.png" alt=""></div>
+        <div id="enemycar3"><img id="ecarimg3" class="ecarimg" src="car12.png" alt=""></div>
+        <div id="enemycar4"><img id="ecarimg4" class="ecarimg" src="car13.png" alt=""></div>
+    </div>
+
+    <div id="mycar"><img id="mycarimg" class="mycarimg" src="car15.png" alt=""></div>
+    <div id="road"></div>
+
+
 </body>
 
 <script>
-    var canvas = document.getElementById("myCanvas");
-    var ctx = canvas.getContext("2d");
-    var carImage = new Image();
-    carImage.src = "car12.png";
-
-    class Car {
-        constructor(x, y, speed, image) {
-            this.x = x;
-            this.y = y;
-            this.speed = speed;
-            this.image = image;
-            this.width = image.width;
-            this.height = image.height;
-        }
-
-        update() {
-            // Update the car's position based on speed and other factors
-            this.y += this.speed;
-        }
-
-        render(ctx) {
-            // Render the car image on the canvas context
-            ctx.drawImage(this.image, this.x, this.y);
-        }
-    }
-
-    var cars = [];
-    var carCount = 5; // Number of cars on the road
-
-    function createCars() {
-        for (let i = 0; i < carCount; i++) {
-            let x = Math.random() * 400; // Random x position within road width
-            let y = -Math.random() * 1000; // Cars start from above the road
-            let speed = Math.random() * 5 + 1; // Random speed between 1 and 6
-            let car = new Car(x, y, speed, carImage);
-            cars.push(car);
-        }
-    }
-
-    createCars();
-
-    function update() {
-        // Update the car positions
-        for (let i = 0; i < carCount; i++) {
-            cars[i].update();
-        }
-
-        // Check for collisions
-        checkCollisions();
-
-        // Clear the canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Render the cars
-        for (let i = 0; i < carCount; i++) {
-            cars[i].render(ctx);
-        }
-
-        // Request the next frame
-        requestAnimationFrame(update);
-    }
-
-    // Start the animation loop
-    update();
 
 
-    // Speed of the car
-    const road = document.getElementById("road");
-    const scoreCounter = document.getElementById("score");
-    const car = document.getElementById("my_car");
+    document.getElementById("start").addEventListener("click", function () {
 
-    const roadHeight = road.clientHeight;
-    const roadWidth = road.clientWidth;
-
-    const carHeight = car.clientHeight;
-    const carWidth = car.clientWidth;
-    let carPositionX = (roadWidth - (carWidth / 2)) / 2;
-    let carPositionY = (roadHeight - carHeight) - 15;
-
-    let score = 0;
-    let pressedKeys = {};
-    const carSpeed = 2;
+        document.getElementById("start").style.display = 'none'
+        document.getElementById("road").style.animation = 'roadanimation 20s linear infinite'
 
 
-    document.addEventListener("keydown", function(event) {
-        pressedKeys[event.key] = true;
-    });
-    document.addEventListener("keyup", function(event) {
-        pressedKeys[event.key] = false;
-    });
+        setInterval(() => {
+            num = Math.floor(Math.random() * (350 - 230 + 1) + 230)
+            document.getElementById("enemycar1").style.left = `${num}px`
 
-    // Function to keep the car inside the road
-    // Function to control the car
-    function moveCar() {
-        if (pressedKeys["ArrowUp"] && pressedKeys["ArrowRight"]) {
-            if (carPositionY  < roadHeight - carHeight && carPositionX + carWidth < roadWidth) {
-                carPositionX += carSpeed / -3;
-                carPositionY -= carSpeed / -3;
+        }, 3000)
+        setInterval(() => {
+            num = Math.floor(Math.random() * (150 - 50 + 1) + 50)
+            document.getElementById("enemycar2").style.left = `${num}px`
+
+        }, 6000)
+        setInterval(() => {
+            num = Math.floor(Math.random() * (-50 + 140 + 1) - 140)
+            document.getElementById("enemycar3").style.left = `${num}px`
+
+        }, 5000)
+        setInterval(() => {
+            num = Math.floor(Math.random() * (-220 + 330 + 1) - 330)
+            document.getElementById("enemycar4").style.left = `${num}px`
+
+        }, 4000)
+
+
+        document.getElementById("enemycar1").style.animation = 'ecar1 3s linear infinite'
+        document.getElementById("enemycar2").style.animation = 'ecar2 6s linear infinite'
+        document.getElementById("enemycar3").style.animation = 'ecar3 5s linear infinite'
+        document.getElementById("enemycar4").style.animation = 'ecar4 4s linear infinite'
+
+
+        let t = 15
+        let l = 0
+
+        window.addEventListener("keydown", function (x) {
+
+            if (x.keyCode == 87) {
+                t = t - 3
+
             }
-        }
-        if (pressedKeys["ArrowUp"] && pressedKeys["ArrowLeft"]) {
-            if (carPositionY > 0 && carPositionX > 0) {
-                carPositionX -= carSpeed / -3;
-                carPositionY -= carSpeed / -3;
+            if (x.keyCode == 65) {
+                l = l - 1
             }
-        }
-        if (pressedKeys["ArrowDown"] && pressedKeys["ArrowRight"]) {
-            if (carPositionY + carHeight < roadHeight && carPositionX + carWidth < roadWidth) {
-                carPositionX += carSpeed / -3;
-                carPositionY += carSpeed / -3;
+            if (x.keyCode == 83) {
+                t = t + 3
             }
-        }
-        if (pressedKeys["ArrowDown"] && pressedKeys["ArrowLeft"]) {
-            if (carPositionY + carHeight < roadHeight && carPositionX + carWidth < roadWidth) {
-                carPositionX -= carSpeed / -3;
-                carPositionY += carSpeed / -3;
+            if (x.keyCode == 68) {
+                l = l + 1
             }
-        }
+            document.getElementById("mycar").style.top = `${t}vh`
+            document.getElementById("mycar").style.left = `${l}vw`
+        })
 
-        if (pressedKeys["ArrowRight"] && carPositionX + carWidth < roadWidth) {
-            carPositionX += carSpeed;
-        } 
-        if (pressedKeys["ArrowLeft"] && carPositionX > 0) {
-            carPositionX -= carSpeed;
-        } 
-        if (pressedKeys["ArrowUp"] && carPositionY > 0) {
-            carPositionY -= carSpeed;
-        } 
-        if (pressedKeys["ArrowDown"] && carPositionY + carHeight < roadHeight) {
-            carPositionY += carSpeed;
-        }
-        car.style.left = carPositionX + "px";
-        car.style.top = carPositionY + "px";
+        n = 0
+        setInterval(() => {
 
-        requestAnimationFrame(moveCar);
-    }
-    requestAnimationFrame(moveCar);
+            document.getElementById("score").innerText = `Score : ${n}`
+            n = n + 1
 
-    function startGame() {
-        document.querySelector("#start").remove();
-        scoreCounter.textContent = "You have reached: " + score + " Matize's";
-        scoreCounter.style.width = "22%";
-    }
 
-    function checkCollisions() {
-        const carRect = {
-            x: carPositionX,
-            y: carPositionY,
-            width: carWidth,
-            height: carHeight
-        };
 
-        for (let i = 0; i < carCount; i++) {
-            const otherCarRect = {
-                x: cars[i].x,
-                y: cars[i].y,
-                width: cars[i].width,
-                height: cars[i].height
-            };
+            var ecar1_left = Math.abs(document.getElementById("ecarimg1").getBoundingClientRect().left);
+            var ecar1_right = Math.abs(document.getElementById("ecarimg1").getBoundingClientRect().right);
+            var ecar1_top = Math.abs(document.getElementById("ecarimg1").getBoundingClientRect().top);
+            var ecar1_bottom = Math.abs(document.getElementById("ecarimg1").getBoundingClientRect().bottom);
 
-            if (doRectanglesOverlap(carRect, otherCarRect)) {
-                handleCollision();
-                break;
+            var ecar2_left = Math.abs(document.getElementById("ecarimg2").getBoundingClientRect().left);
+            var ecar2_right = Math.abs(document.getElementById("ecarimg2").getBoundingClientRect().right);
+            var ecar2_top = Math.abs(document.getElementById("ecarimg2").getBoundingClientRect().top);
+            var ecar2_bottom = Math.abs(document.getElementById("ecarimg2").getBoundingClientRect().bottom);
+
+            var ecar3_left = Math.abs(document.getElementById("ecarimg3").getBoundingClientRect().left);
+            var ecar3_right = Math.abs(document.getElementById("ecarimg3").getBoundingClientRect().right);
+            var ecar3_top = Math.abs(document.getElementById("ecarimg3").getBoundingClientRect().top);
+            var ecar3_bottom = Math.abs(document.getElementById("ecarimg3").getBoundingClientRect().bottom);
+
+            var ecar4_left = Math.abs(document.getElementById("ecarimg4").getBoundingClientRect().left);
+            var ecar4_right = Math.abs(document.getElementById("ecarimg4").getBoundingClientRect().right);
+            var ecar4_top = Math.abs(document.getElementById("ecarimg4").getBoundingClientRect().top);
+            var ecar4_bottom = Math.abs(document.getElementById("ecarimg4").getBoundingClientRect().bottom);
+
+            var mycar_left = Math.abs(document.getElementById("mycarimg").getBoundingClientRect().left);
+            var mycar_right = Math.abs(document.getElementById("mycarimg").getBoundingClientRect().right);
+            var mycar_top = Math.abs(document.getElementById("mycarimg").getBoundingClientRect().top);
+            var mycar_bottom = Math.abs(document.getElementById("mycarimg").getBoundingClientRect().bottom);
+
+
+            if (mycar_left < 450 || mycar_right > 1130 || mycar_top < 20 || mycar_bottom > 690) {
+                setTimeout(() => {
+                    window.alert("Chłopie patrz jak jeździsz! ");
+
+                })
+                location.reload()
+
             }
-        }
-    }
+            if (((ecar1_left < mycar_left && mycar_left < ecar1_right) || (ecar1_left < mycar_right && mycar_right < ecar1_right)) && ((ecar1_top < mycar_top && mycar_top < ecar1_bottom) || (ecar1_top < mycar_bottom && mycar_bottom < ecar1_bottom))) {
 
-    function doRectanglesOverlap(rect1, rect2) {
-        return (
-            rect1.x < rect2.x + rect2.width &&
-            rect1.x + rect1.width > rect2.x &&
-            rect1.y < rect2.y + rect2.height &&
-            rect1.y + rect1.height > rect2.y
-        );
-    }
+                setTimeout(() => {
+                    window.alert("Chłopie patrz jak jeździsz! ");
 
-    function handleCollision() {
-        // Reset the car position
-        carPositionX = (roadWidth - (carWidth / 2)) / 2;
-        carPositionY = (roadHeight - carHeight) - 15;
+                })
+                location.reload()
 
-        // Increment the score
-        score++;
-    }
+            }
+            if (((ecar2_left < mycar_left && mycar_left < ecar2_right) || (ecar2_left < mycar_right && mycar_right < ecar2_right)) && ((ecar2_top < mycar_top && mycar_top < ecar2_bottom) || (ecar2_top < mycar_bottom && mycar_bottom < ecar2_bottom))) {
+
+                setTimeout(() => {
+                    window.alert("Chłopie patrz jak jeździsz! ");
+
+                })
+                location.reload()
+
+            }
+            if (((ecar3_left < mycar_left && mycar_left < ecar3_right) || (ecar3_left < mycar_right && mycar_right < ecar3_right)) && ((ecar3_top < mycar_top && mycar_top < ecar3_bottom) || (ecar3_top < mycar_bottom && mycar_bottom < ecar3_bottom))) {
+
+                setTimeout(() => {
+                    window.alert("Chłopie patrz jak jeździsz!  " );
+
+                })
+                location.reload()
+
+            }
+            if (((ecar4_left < mycar_left && mycar_left < ecar4_right) || (ecar4_left < mycar_right && mycar_right < ecar4_right)) && ((ecar4_top < mycar_top && mycar_top < ecar4_bottom) || (ecar4_top < mycar_bottom && mycar_bottom < ecar4_bottom))) {
+
+                setTimeout(() => {
+                    window.alert("Chłopie patrz jak jeździsz!  " );
+
+                })
+                location.reload()
+
+            }
+
+
+        }, 100)
+
+
+
+    })
+
 </script>
+
+</html>

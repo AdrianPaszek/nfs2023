@@ -5,75 +5,9 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title> RED MATIZ </title>
+        <link rel="stylesheet" href="style.css">
     </head>
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-        }
-        body{overflow: hidden;
-        margin-top: 0px;}
-        button,
-            p{position: absolute;}
-            body{background-image: url(back.jpg);
-        }
-
-        img {
-            height:50px;
-            width:50px
-        }
-        
-        #my_car {
-            position: absolute;
-            bottom: 15px;
-        }
-        #road {
-            position: relative;
-            margin: 0 auto;
-            width: 500px;
-            height: 100vh;
-            background-image:url(droga.png);
-            background-repeat: no-repeat;
-            background-size: cover;
-            border: solid black;
-            border-top: 0;
-            border-bottom: 0;
-        }       
-
-        #start{
-            position: absolute;
-            top: 60vh;
-            left: 47vw;
-            z-index: 100;
-            font-size: 2rem;
-            background-color:rgb(215, 12, 12);
-            color: white;
-            padding: 5px;
-            border-radius: 20px;
-            cursor: pointer;
-       }
-       #score{
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            font-size:2rem;
-            padding: 5px;
-            background-color: aliceblue;
-            border-radius: 20px;
-       }
-       .enemy{
-        width: 100px;
-        height: 100px;
-        position: absolute;
-        background-image: url(car10.png);
-        rotate: 180deg;
-        background-repeat: no-repeat;
-        background-size: contain;
-    }
-  
-    </style>
-    
+ 
     <body>
         <p id="score"></p>
         <button id="start" onclick="startGame()"> start </button>
@@ -82,39 +16,41 @@
                 <div id="my_car"><img src="car15.png" alt="car"></div>
             </div>
         </center>
-        
+ 
     </body>
-
+ 
     <script>
-
-        // szybkość autka
         const road = document.getElementById("road");
         const scoreCounter = document.getElementById("score");
         const car = document.getElementById("my_car");
-        
+ 
         const roadHeight = road.clientHeight;
         const roadWidth = road.clientWidth;
-        
+ 
         const carHeight = car.clientHeight;
         const carWidth = car.clientWidth;
         let carPositionX = ( roadWidth - (carWidth/2) ) / 2;
         let carPositionY = ( roadHeight - carHeight ) - 15;
-        
+ 
         let score = 0;
         let pressedKeys = {};
         const carSpeed = 2;
-        
-
-        document.addEventListener("keydown", function(event) {
-            pressedKeys[event.key] = true;
-        });
-        document.addEventListener("keyup", function(event) {
-            pressedKeys[event.key] = false;
-        });
-    
+        const enemyCarSpeed = 5;
+        const enemies_list= [
+            "car10.png",
+            "car11.png",
+            "car12.png",
+            "car13.png",
+            "car14.png"]
+ 
         function enemyCarSpawn() {
             setInterval(() => {
                 let enemyCar = document.createElement('div');
+                let enemyImage = Math.floor(Math.random() *enemies_list.length)
+                let image = enemies_list[enemyImage];
+                console.log(image);
+                enemyCar.style.backgroundImage = "url(" + image + ")";
+            
                 enemyCar.setAttribute('class', 'enemy');
                 enemyCar.style.top = 10 + "px";
                 enemyCar.style.left = (Math.random() * (roadWidth - carWidth)) + "px";
@@ -124,10 +60,12 @@
                 let enemyCarMove = setInterval(() => {
                     const enemyCarY = enemyCar.offsetTop;
                     if (enemyCarY >= roadHeight) {
+                        score++;
+                        scoreCounter.textContent = "You have reached: " + score + " Matize's";
                         road.removeChild(enemyCar);
-                        clearInvertal(enemyCarMove);
+                        clearInterval(enemyCarMove);
                     } else {
-                        enemyCar.style.top = enemyCar.offsetTop + carSpeed + "px";
+                        enemyCar.style.top = enemyCar.offsetTop + enemyCarSpeed + "px";
                         if (
                             enemyCarY + 100 >= carPositionY &&
                             enemyCarY <= carPositionY + carHeight &&
@@ -136,13 +74,21 @@
                         ) {
                             clearInterval(enemyCarMove);
                             window.alert("Chłopie patrz jak jeździsz! | Wynik: " + score);
+                            resetGame()
                         }
                     }
-
+ 
                 }, 10);
-            }, 2000);
+            }, 500);
         };
-
+ 
+        document.addEventListener("keydown", function(event) {
+            pressedKeys[event.key] = true;
+        });
+        document.addEventListener("keyup", function(event) {
+            pressedKeys[event.key] = false;
+        });
+ 
         // funkcja utrzymujaca samochod wewnatrz drogi
         // funkcja sterujaca samochodem
         function moveCar() {
@@ -170,7 +116,7 @@
                     carPositionY += carSpeed/-3;
                 }
             }
-            
+ 
             if (pressedKeys["ArrowRight"] && carPositionX + carWidth < roadWidth) {
                 carPositionX += carSpeed;
             } 
@@ -185,17 +131,38 @@
             }
             car.style.left = carPositionX + "px";
             car.style.top = carPositionY + "px";
-
+ 
             requestAnimationFrame(moveCar);
         };
+ 
         requestAnimationFrame(moveCar);
-
         function startGame() { 
             document.querySelector("#start").remove();
-            scoreCounter.textContent = "You have reached: " + score + " Matize's";
+            scoreCounter.textContent = "Ominąłeś: " + score + " przeciwników Matiza";
             scoreCounter.style.width = "22%";
-            for(cars = 0; cars < Math.random() * 2; cars++) {
-                enemyCarSpawn();
-            };
+            enemyCarSpawn();
+        };
+ 
+        function resetGame() {
+            score = 0;
+            carPositionX = (roadWidth - carWidth) / 2;
+            carPositionY = roadHeight - carHeight - 15;
+ 
+            let enemyCars = document.getElementsByClassName('enemy');
+            while (enemyCars.length > 0) {
+                road.removeChild(enemyCars[0]);
+            }
+ 
+            var keys = Object.keys(pressedKeys);
+            for (var i = 0; i < keys.length; i++) {
+                var key = keys[i];
+                pressedKeys[key] = false;
+            }
+ 
+            startGame();
+        }
+ 
+        window.onbeforeunload = function() {
+            resetGame();
         };
     </script>
