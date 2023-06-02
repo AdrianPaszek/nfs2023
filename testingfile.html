@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RED MATIZ</title>
+</head>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    body {
+        overflow: hidden;
+        margin-top: 0px;
+    }
+    button,
+    p {
+        position: absolute;
+    }
+    body {
+        background-image: url(back.jpg);
+    }
+
+    img {
+        height: 50px;
+        width: 50px
+    }
+
+    #my_car {
+        position: absolute;
+        bottom: 15px;
+    }
+    #road {
+        position: relative;
+        margin: 0 auto;
+        width: 500px;
+        height: 100vh;
+        background-image: url(droga.png);
+        background-repeat: no-repeat;
+        background-size: cover;
+        border: solid black;
+        border-top: 0;
+        border-bottom: 0;
+    }       
+
+    #start {
+        position: absolute;
+        top: 60vh;
+        left: 47vw;
+        z-index: 100;
+        font-size: 2rem;
+        background-color: rgb(215, 12, 12);
+        color: white;
+        padding: 5px;
+        border-radius: 20px;
+        cursor: pointer;
+    }
+    #score {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        font-size: 2rem;
+        padding: 5px;
+        background-color: aliceblue;
+        border-radius: 20px;
+    }
+
+</style>
+
+<body>
+    <p id="score"></p>
+    <button id="start" onclick="startGame()">Start</button>
+    <center>
+        <div id="road">
+            <div id="my_car"><img src="car15.png" alt="car"></div>
+        </div>
+        <div>
+            
+        </div>
+    </center>
+    
+</body>
+
+<script>
+    var canvas = document.getElementById("myCanvas");
+    var ctx = canvas.getContext("2d");
+    var carImage = new Image();
+    carImage.src = "car12.png";
+
+    class Car {
+        constructor(x, y, speed, image) {
+            this.x = x;
+            this.y = y;
+            this.speed = speed;
+            this.image = image;
+            this.width = image.width;
+            this.height = image.height;
+        }
+
+        update() {
+            // Update the car's position based on speed and other factors
+            this.y += this.speed;
+        }
+
+        render(ctx) {
+            // Render the car image on the canvas context
+            ctx.drawImage(this.image, this.x, this.y);
+        }
+    }
+
+    var cars = [];
+    var carCount = 5; // Number of cars on the road
+
+    function createCars() {
+        for (let i = 0; i < carCount; i++) {
+            let x = Math.random() * 400; // Random x position within road width
+            let y = -Math.random() * 1000; // Cars start from above the road
+            let speed = Math.random() * 5 + 1; // Random speed between 1 and 6
+            let car = new Car(x, y, speed, carImage);
+            cars.push(car);
+        }
+    }
+
+    createCars();
+
+    function update() {
+        // Update the car positions
+        for (let i = 0; i < carCount; i++) {
+            cars[i].update();
+        }
+
+        // Check for collisions
+        checkCollisions();
+
+        // Clear the canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Render the cars
+        for (let i = 0; i < carCount; i++) {
+            cars[i].render(ctx);
+        }
+
+        // Request the next frame
+        requestAnimationFrame(update);
+    }
+
+    // Start the animation loop
+    update();
+
+
+    // Speed of the car
+    const road = document.getElementById("road");
+    const scoreCounter = document.getElementById("score");
+    const car = document.getElementById("my_car");
+
+    const roadHeight = road.clientHeight;
+    const roadWidth = road.clientWidth;
+
+    const carHeight = car.clientHeight;
+    const carWidth = car.clientWidth;
+    let carPositionX = (roadWidth - (carWidth / 2)) / 2;
+    let carPositionY = (roadHeight - carHeight) - 15;
+
+    let score = 0;
+    let pressedKeys = {};
+    const carSpeed = 2;
+
+
+    document.addEventListener("keydown", function(event) {
+        pressedKeys[event.key] = true;
+    });
+    document.addEventListener("keyup", function(event) {
+        pressedKeys[event.key] = false;
+    });
+
+    // Function to keep the car inside the road
+    // Function to control the car
+    function moveCar() {
+        if (pressedKeys["ArrowUp"] && pressedKeys["ArrowRight"]) {
+            if (carPositionY  < roadHeight - carHeight && carPositionX + carWidth < roadWidth) {
+                carPositionX += carSpeed / -3;
+                carPositionY -= carSpeed / -3;
+            }
+        }
+        if (pressedKeys["ArrowUp"] && pressedKeys["ArrowLeft"]) {
+            if (carPositionY > 0 && carPositionX > 0) {
+                carPositionX -= carSpeed / -3;
+                carPositionY -= carSpeed / -3;
+            }
+        }
+        if (pressedKeys["ArrowDown"] && pressedKeys["ArrowRight"]) {
+            if (carPositionY + carHeight < roadHeight && carPositionX + carWidth < roadWidth) {
+                carPositionX += carSpeed / -3;
+                carPositionY += carSpeed / -3;
+            }
+        }
+        if (pressedKeys["ArrowDown"] && pressedKeys["ArrowLeft"]) {
+            if (carPositionY + carHeight < roadHeight && carPositionX + carWidth < roadWidth) {
+                carPositionX -= carSpeed / -3;
+                carPositionY += carSpeed / -3;
+            }
+        }
+
+        if (pressedKeys["ArrowRight"] && carPositionX + carWidth < roadWidth) {
+            carPositionX += carSpeed;
+        } 
+        if (pressedKeys["ArrowLeft"] && carPositionX > 0) {
+            carPositionX -= carSpeed;
+        } 
+        if (pressedKeys["ArrowUp"] && carPositionY > 0) {
+            carPositionY -= carSpeed;
+        } 
+        if (pressedKeys["ArrowDown"] && carPositionY + carHeight < roadHeight) {
+            carPositionY += carSpeed;
+        }
+        car.style.left = carPositionX + "px";
+        car.style.top = carPositionY + "px";
+
+        requestAnimationFrame(moveCar);
+    }
+    requestAnimationFrame(moveCar);
+
+    function startGame() {
+        document.querySelector("#start").remove();
+        scoreCounter.textContent = "You have reached: " + score + " Matize's";
+        scoreCounter.style.width = "22%";
+    }
+
+    function checkCollisions() {
+        const carRect = {
+            x: carPositionX,
+            y: carPositionY,
+            width: carWidth,
+            height: carHeight
+        };
+
+        for (let i = 0; i < carCount; i++) {
+            const otherCarRect = {
+                x: cars[i].x,
+                y: cars[i].y,
+                width: cars[i].width,
+                height: cars[i].height
+            };
+
+            if (doRectanglesOverlap(carRect, otherCarRect)) {
+                handleCollision();
+                break;
+            }
+        }
+    }
+
+    function doRectanglesOverlap(rect1, rect2) {
+        return (
+            rect1.x < rect2.x + rect2.width &&
+            rect1.x + rect1.width > rect2.x &&
+            rect1.y < rect2.y + rect2.height &&
+            rect1.y + rect1.height > rect2.y
+        );
+    }
+
+    function handleCollision() {
+        // Reset the car position
+        carPositionX = (roadWidth - (carWidth / 2)) / 2;
+        carPositionY = (roadHeight - carHeight) - 15;
+
+        // Increment the score
+        score++;
+    }
+</script>

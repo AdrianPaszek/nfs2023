@@ -4,104 +4,198 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-        <link rel="stylesheet" href="style.css">
+        <title> RED MATIZ </title>
     </head>
 
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        body{overflow: hidden;
+        margin-top: 0px;}
+        button,
+            p{position: absolute;}
+            body{background-image: url(back.jpg);
+        }
 
-    <body>
-
-        <div id="score">Score : 0</div>
-        <button onclick="start()" id="start">start   </button>
-
-        <div class="flex road">
-
-            <img src="1.jpg"/>
-            <img src="1.jpg"/>
-
-        </div>
-
-        <div>
-            <div class="cardiv" id="enemycar1"><img id="ecaring1" class="ecaring" src="car11.png" alt=""/></div>
-            <div class="cardiv" id="enemycar2"><img id="ecaring2" class="ecaring" src="car12.png" alt=""/></div>
-            <div class="cardiv" id="enemycar3"><img id="ecaring3" class="ecaring" src="car11.png" alt=""/></div>
-            <div class="cardiv" id="enemycar4"><img id="ecaring3" class="ecaring" src="car12.png" alt=""/></div>
-
-        </div>
-
-
-        <img id="mycar" class="mycars" src="car13.png" alt="" >
+        img {
+            height:50px;
+            width:50px
+        }
         
+        #my_car {
+            position: absolute;
+            bottom: 15px;
+        }
+        #road {
+            position: relative;
+            margin: 0 auto;
+            width: 500px;
+            height: 100vh;
+            background-image:url(droga.png);
+            background-repeat: no-repeat;
+            background-size: cover;
+            border: solid black;
+            border-top: 0;
+            border-bottom: 0;
+        }       
 
-
-
-
-
+        #start{
+            position: absolute;
+            top: 60vh;
+            left: 47vw;
+            z-index: 100;
+            font-size: 2rem;
+            background-color:rgb(215, 12, 12);
+            color: white;
+            padding: 5px;
+            border-radius: 20px;
+            cursor: pointer;
+       }
+       #score{
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size:2rem;
+            padding: 5px;
+            background-color: aliceblue;
+            border-radius: 20px;
+       }
+       .enemy{
+        width: 100px;
+        height: 100px;
+        position: absolute;
+        background-image: url(car10.png);
+        rotate: 180deg;
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+  
+    </style>
+    
+    <body>
+        <p id="score"></p>
+        <button id="start" onclick="startGame()"> start </button>
+        <center>
+            <div id="road">
+                <div id="my_car"><img src="car15.png" alt="car"></div>
+            </div>
+        </center>
+        
     </body>
 
     <script>
 
-        function start() {
-            const enemyCars = document.querySelectorAll(".cardiv")
-            document.querySelector("#start").remove()
-
-for (const car of enemyCars) {
-    car.style.animationPlayState = 'running'
-    console.log("a")
-}
-        }
-
-function checkCollisions(collidingCar) {
-  const mycar = document.getElementById('mycar');
-  const carRect = mycar.getBoundingClientRect();
-  const enemyCarRect = collidingCar.getBoundingClientRect();
-
-  if (
-    carRect.left < enemyCarRect.right &&
-    carRect.right > enemyCarRect.left &&
-    carRect.top < enemyCarRect.bottom &&
-    carRect.bottom > enemyCarRect.top
-  ) {
-    console.log('Elements collide!');
-    alert("Game Over")
-    return
-  } 
-
-  requestAnimationFrame(() => checkCollisions(collidingCar));
-}
-
-const enemyCars = document.querySelectorAll(".ecaring")
-
-for (const car of enemyCars) {
-
-requestAnimationFrame(() => checkCollisions(car));
-}
-
-    let t=15
-    let l=0
-
-      window.addEventListener("keydown",function(x){
-        if(x.keyCode==87){
-            t=t-3
-        }
-        if(x.keyCode==65){
-            l=l-1
-            //alert("w")
-        }
-        if(x.keyCode==83){
-            t=t+3
-
-            //alert("w")
-        }
-        if(x.keyCode==68){
-            l=l+1
-           // alert("w")
-        }
-        document.getElementById("mycar").style.top=`${t}vh` 
-        document.getElementById("mycar").style.left=`${l}vw`
-
+        // szybkość autka
+        const road = document.getElementById("road");
+        const scoreCounter = document.getElementById("score");
+        const car = document.getElementById("my_car");
         
-      })
+        const roadHeight = road.clientHeight;
+        const roadWidth = road.clientWidth;
+        
+        const carHeight = car.clientHeight;
+        const carWidth = car.clientWidth;
+        let carPositionX = ( roadWidth - (carWidth/2) ) / 2;
+        let carPositionY = ( roadHeight - carHeight ) - 15;
+        
+        let score = 0;
+        let pressedKeys = {};
+        const carSpeed = 2;
+        
 
+        document.addEventListener("keydown", function(event) {
+            pressedKeys[event.key] = true;
+        });
+        document.addEventListener("keyup", function(event) {
+            pressedKeys[event.key] = false;
+        });
+    
+        function enemyCarSpawn() {
+            setInterval(() => {
+                let enemyCar = document.createElement('div');
+                enemyCar.setAttribute('class', 'enemy');
+                enemyCar.style.top = 10 + "px";
+                enemyCar.style.left = (Math.random() * (roadWidth - carWidth)) + "px";
+                enemyCar.style.display = "block";
+                road.appendChild(enemyCar);
+
+                let enemyCarMove = setInterval(() => {
+                    const enemyCarY = enemyCar.offsetTop;
+                    if (enemyCarY >= roadHeight) {
+                        road.removeChild(enemyCar);
+                        clearInvertal(enemyCarMove);
+                    } else {
+                        enemyCar.style.top = enemyCar.offsetTop + carSpeed + "px";
+                        if (
+                            enemyCarY + 100 >= carPositionY &&
+                            enemyCarY <= carPositionY + carHeight &&
+                            parseInt(enemyCar.style.left) >= carPositionX - carWidth &&
+                            parseInt(enemyCar.style.left) <= carPositionX + carWidth
+                        ) {
+                            clearInterval(enemyCarMove);
+                            window.alert("Chłopie patrz jak jeździsz! | Wynik: " + score);
+                        }
+                    }
+
+                }, 10);
+            }, 2000);
+        };
+
+        // funkcja utrzymujaca samochod wewnatrz drogi
+        // funkcja sterujaca samochodem
+        function moveCar() {
+            if (pressedKeys["ArrowUp"] && pressedKeys["ArrowRight"]) {
+                if (carPositionY  < roadHeight-carHeight && carPositionX + carWidth < roadWidth) {
+                    carPositionX += carSpeed/-3;
+                    carPositionY -= carSpeed/-3;
+                }
+            }
+            if (pressedKeys["ArrowUp"] && pressedKeys["ArrowLeft"]) {
+                if (carPositionY > 0 && carPositionX > 0) {
+                    carPositionX -= carSpeed/-3;
+                    carPositionY -= carSpeed/-3;
+                }
+            }
+            if (pressedKeys["ArrowDown"] && pressedKeys["ArrowRight"]) {
+                if (carPositionY + carHeight < roadHeight && carPositionX + carWidth < roadWidth) {
+                    carPositionX += carSpeed/-3;
+                    carPositionY += carSpeed/-3;
+                }
+            }
+            if (pressedKeys["ArrowDown"] && pressedKeys["ArrowLeft"]) {
+                if (carPositionY + carHeight < roadHeight && carPositionX + carWidth < roadWidth) {
+                    carPositionX -= carSpeed/-3;
+                    carPositionY += carSpeed/-3;
+                }
+            }
+            
+            if (pressedKeys["ArrowRight"] && carPositionX + carWidth < roadWidth) {
+                carPositionX += carSpeed;
+            } 
+            if (pressedKeys["ArrowLeft"] && carPositionX > 0) {
+                carPositionX -= carSpeed;
+            } 
+            if (pressedKeys["ArrowUp"] && carPositionY > 0) {
+                carPositionY -= carSpeed;
+            } 
+            if (pressedKeys["ArrowDown"] && carPositionY + carHeight < roadHeight) {
+                carPositionY += carSpeed;
+            }
+            car.style.left = carPositionX + "px";
+            car.style.top = carPositionY + "px";
+
+            requestAnimationFrame(moveCar);
+        };
+        requestAnimationFrame(moveCar);
+
+        function startGame() { 
+            document.querySelector("#start").remove();
+            scoreCounter.textContent = "You have reached: " + score + " Matize's";
+            scoreCounter.style.width = "22%";
+            for(cars = 0; cars < Math.random() * 2; cars++) {
+                enemyCarSpawn();
+            };
+        };
     </script>
-</html>
