@@ -24,9 +24,9 @@
     }
 
     #road {
-        background: url(droga.png) repeat-y;
+        background: url(droga.png) repeat;
         height: 1200vh;
-        width: 50vw;
+        width: 75vw;
         position: relative;
         top: -80vh;
         z-index: -9;
@@ -191,11 +191,12 @@
 
 <script>
 
+    var road = document.getElementById("road")
 
     document.getElementById("start").addEventListener("click", function () {
 
         document.getElementById("start").style.display = 'none'
-        document.getElementById("road").style.animation = 'roadanimation 20s linear infinite'
+        road.style.animation = 'roadanimation 20s linear infinite'
 
 
         setInterval(() => {
@@ -282,7 +283,9 @@
             var mycar_bottom = Math.abs(document.getElementById("mycarimg").getBoundingClientRect().bottom);
 
 
-            if (mycar_left < 450 || mycar_right > 1130 || mycar_top < 20 || mycar_bottom > 690) {
+
+
+            if (mycar_left < road.offsetLeft || mycar_right > road.offsetLeft + road.offsetWidth || mycar_top < 20 || mycar_bottom > 690) {
                 setTimeout(() => {
                     window.alert("Chłopie patrz jak jeździsz! ");
 
